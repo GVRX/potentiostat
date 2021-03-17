@@ -1,41 +1,19 @@
-# IO Rodeo Potentiostat Shield
+# IO Rodeo Potentiostat Shield (Variant for ECL — under development)
 
-![alt text](/images/pstat_shield_img_0.JPG)
+![alt text]
 
-Hardware design, firmware and software for IO Rodeo's Potentiostat Shield.  
+Forked from https://github.com/iorodeo/potentiostat. 
 
-
-## Hardware
-
-* Designed as a shield for  [teensy 3.2 development board](https://www.pjrc.com/teensy/teensy31.html).   
-* 12-bit voltage output with four range settings:  +/- 1, 2, 5, 10V
-* 16-bit current measurement with four  range settings: +/- 1, 10, 100, 1000 uA ranges
-* Can be programmed over USB using the Arduino IDE ([teensyduino](https://www.pjrc.com/teensy/td_download.html)).  
-* Expansion headers with DIO, analog inputs, UART, I2C, and SPI 
-* [Schematic](https://github.com/iorodeo/potentiostat/releases/download/v0.1/potentiostat_shield_schematic_v0p1r2.pdf)
+Under development:
+  - New version of firmware for modified hardware for electrocheminiluminescence (ECL). Details to be provided...
+  - Modification of python software to work with ECL device firmware.
 
 
-## Firmware
 
-* Implements many standard voltammetric methods including: 
-    - constant voltage, 
-    - cyclic voltammetry, 
-    - sinusoidal voltammetry,
-    - linearsweep voltammetry, 
-    - chronoamperometry, 
-    - multistep. 
-* API for control over USB/Serial using messages in JSON. 
-* Easy to extend enabling users to add custom tests. 
 
-## Libraries
+Grant van Riessen, 
+Darrell Elton, 
+Conor Hogan 
+(La Trobe University)
 
-* Python 
-    - Documentation http://stuff.iorodeo.com/docs/potentiostat/  
-* Javascript
-    - Documentation (TODO)
-* C++
-    - Documentation (TODO)
 
-## Software
-
-TODO
