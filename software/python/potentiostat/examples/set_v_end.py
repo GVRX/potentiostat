@@ -5,10 +5,14 @@ import sys
 if len(sys.argv) > 1:
     port = sys.argv[1]
 else:
-    port = '/dev/tty.usbmodem65156601' #'/dev/ttyACM0'
+    #port = '/dev/ttyACM0'
+    port = '/dev/tty.usbmodem65156601'
 
 dev = Potentiostat(port)
 
-variant = dev.get_hardware_variant()
-print('hardware variant: ', variant)
+Vf = 1.45
+param_rsp = dev.set_VEnd(Vf)
+print(param_rsp)
 
+param_rsp = dev.get_VEnd()
+print(param_rsp)
