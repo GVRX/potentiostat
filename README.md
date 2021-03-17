@@ -1,4 +1,4 @@
-# IO Rodeo Potentiostat Shield
+# IO Rodeo Potentiostat Shield (Variant for ECL — under development)
 
 ![alt text]
 
