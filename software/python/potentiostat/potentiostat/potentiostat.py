@@ -256,16 +256,23 @@ class Potentiostat(serial.Serial):
         self.measure = [TimeKey, CurrKey, VoltKey] # do we want a default? (or None?)   [gvr]
         self.debug = debug
          
-        super(Potentiostat,self).__init__(port,**params)
+        # try:
+        #     super(Potentiostat,self).__init__(port,**params)
+        # except SerialException as e:
+        #     print('Serial port {} not found. Available serial ports:\n'.format(e.args))
+        super(Potentiostat,self).__init__(port,**params)    
+        
         time.sleep(self.ResetSleepDt)
         atexit.register(self.atexit_cleanup)
-        self.flush()   # experiment to fix reconnect problem... (gvr)
-    
+        
         while self.inWaiting() > 0:
             val = self.read()
             print(f"val= "+val)
         self.hw_variant = self.get_hardware_variant()
         self.firmware_version = self.get_firmware_version()
+
+        print(self.hw_variant)
+        print(self.firmware_version)
  
 
     def get_hardware_variant(self):
@@ -1017,7 +1024,7 @@ class Potentiostat(serial.Serial):
             # and uses dict cmdMap to provide expected response for given command
             v = msg.decode()
 
-            print ('Decoded: ', v)
+            #print ('Decoded: ', v)
             if v != '':
                 try:
                     v = float(v)
@@ -1084,27 +1091,31 @@ class Potentiostat(serial.Serial):
 
     def atexit_cleanup(self):
         
-        print('Exiting...')
+        #print('Exiting...')
         if self.isOpen() and self.test_running:
             print('Stopping test...')
             self.stop_test()
         
         # close port
         if self.isOpen():
-            print('Closing serial connection...')
+            print('Closing serial connection...',end='')
             self.close()
+            print ('done.')
 
 def avgData(data,avgN=10):   #added DE. GVR moved hardcoded value to param.  TODO: replace with numpy method
     for d in ['v','i','t','l']:
         dlen = len(data[d])
-        if dlen>avg:
+        if dlen>avgN:
             for i in range(dlen-avgN):
                 data[d][i] = sum(data[d][i:i+avgN])/avgN
         data[d] = data[d][:dlen-avgN]
 
 
 
-def plotData(data):
+def plotData(data, smooth=1):
+
+    if smooth> 1:
+       avgData(data,smooth) 
 
     if len(data['v']) == len(data['i']) == len(data['t']):
             plt.figure(1)
@@ -1119,11 +1130,11 @@ def plotData(data):
             plt.xlabel('time (s)')
             plt.grid('on')
 
-            plt.figure(2)
-            plt.plot(data['v'],data['i'])
-            plt.xlabel('potential (V)')
-            plt.ylabel('current (uA)')
-            plt.grid('on')
+            # plt.figure(2)
+            # plt.plot(data['v'],data['i'])
+            # plt.xlabel('potential (V)')
+            # plt.ylabel('current (uA)')
+            # plt.grid('on')
 
             plt.show() #(block=False)
 

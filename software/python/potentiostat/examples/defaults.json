@@ -1,0 +1,22 @@
+{
+    "port"           : "/dev/tty.usbmodem65156601",
+    "dataFileName"   : "ecl_%d.txt",    # %d will be substituted with run counter
+    "testName"       : "cyclic",
+    "numRep"         : 1,               # the numer of times the test will be repeated 
+    "numCycles"      : 1,               # the number of waveform cycles (generally on device)
+    "VMin"           : 0,               # minimum voltage in waveform (V)
+    "VMax"           : 1,               # maximum voltage in waveform (V)
+    "rate"           : 1.0,             # scan rate (V/s)
+    "gain"           : 0.0,             # ADC gain for I, V measurement (= 0.0, 1.0, ... ????)
+    "shift"          : 0,               # Waveform phase shift - expressed as [0,1] number, 0 = no phase shift, 0.5 = 180 deg phase shift, etc.
+    "HV"             : 400,             # PMT HV setting for tests.  400 V is low enough to be safe with ambient lighting, just high enough to observe signal
+    "measure"        : "IP",            # specificies what quantities are measured (= IP, IV or PV)
+    "quietValue"     : 0.0,             # ignored in current version of ECL firmware
+    "quietTime"      : 0,               # ignored in current version of ECL firmware
+    "debug"          : "False",           # Enable/disable output of debugging messages
+    "smooth"         : 10,              # smoothing width, applied to all data obtained 
+    "plot"           : "True",
+    "live"           : "False",
+    "data"           : "False",
+    "progress"       : "False"   
+}

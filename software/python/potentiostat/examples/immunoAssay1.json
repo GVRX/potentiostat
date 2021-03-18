@@ -1,0 +1,17 @@
+{
+    "port"           : "/dev/tty.usbmodem65156601",
+    "dataFileName"   : "ecl_%d.txt",    # %d will be substituted with run counter
+    "testName"       : "cyclic",
+    "numRep"         : 1,
+    "VMin"           : -1.0,            # minimum voltage in waveform (V)
+    "VMax"           : 2.7,               # maximum voltage in waveform (V)
+    "rate"           : 1.0,             # scan rate (V/s)
+    "gain"           : 0.0,             # ADC gain for I, V measurement (= 0.0, 1.0, ... ????)
+    "HV"             : 400,             # PMT HV setting for tests.  400 V is low enough to be safe with ambient lighting, just high enough to observe signal
+    "measure"        : "IP",            # specificies what quantities are measured (= IP, IV or PV)
+    "smooth"         : 10,              # smoothing width, applied to all data obtained 
+    "plot"           : "True",
+    "live"           : "False",
+    "data"           : "False",
+    "progress"       : "False"   
+}

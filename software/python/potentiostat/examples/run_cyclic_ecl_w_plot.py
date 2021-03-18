@@ -18,8 +18,8 @@ from potentiostat import Potentiostat, plotData, avgData
 
 test_name = 'cyclic'   # name of test (only one currently implemented in firmware)
 
-port = '/dev/tty.usbmodem65156601'     # Serial port for potentiostat device. This will need to be changed for different OS
-#port = 'com9'
+# port = '/dev/tty.usbmodem65156601'     # Serial port for potentiostat device. This will need to be changed for different OS
+port = 'com9'
 
 testCounter = 0
 dataFileName = test_name+'_%d.txt'       # Output file for data.  %d will be substitued by counter value
