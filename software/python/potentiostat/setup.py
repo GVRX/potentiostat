@@ -80,7 +80,16 @@ setup(
     ],
 
     keywords='Serial interface for IO Rodeo Potentiostat',
-    packages=find_packages(exclude=['docs', 'tests', 'examples']),
+    #packages=find_packages(exclude=['docs', 'tests', 'examples']),
+    packages=find_packages(exclude=['docs', 'tests']),
 
-    install_requires=['pyserial','progressbar33'],
+    install_requires=['pyserial',
+                      'progressbar33',
+                      'argparse',
+                      'json',
+                      'json_tricks',
+                      'os',
+                      'atexit',
+                      'contextlib',
+                      're'],
 )
