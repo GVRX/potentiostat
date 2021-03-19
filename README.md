@@ -1,6 +1,6 @@
 # IO Rodeo Potentiostat Shield (Variant for ECL — under development)
 
-![alt text]
+![Alt text](assets/ECLometer.png)
 
 Forked from https://github.com/iorodeo/potentiostat. 
 
