@@ -20,14 +20,14 @@ plt.style.use('ggplot')
 
 fig = plt.figure()
 
-def avgData(data,avgN=10):   #added DE. GVR moved hardcoded value to param.  TODO: replace with numpy method
+""" def avgData(data,avgN=10):   #added DE. GVR moved hardcoded value to param.  TODO: replace with numpy method
     for d in ['v','i','t','l']:
         dlen = len(data[d])
         if dlen>avgN:
             for i in range(dlen-avgN):
                 data[d][i] = sum(data[d][i:i+avgN])/avgN
         data[d] = data[d][:dlen-avgN]
-
+ """
 def smoothData(data,span):
     for k in data.keys():
         smooth(data[k],span)

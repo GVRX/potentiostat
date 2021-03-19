@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-import potentiostat 
+from eclometer.potentiostat import Potentiostat
 import argparse 
 import json
 import os
 import serial.tools.list_ports 
 import serial 
-from utilCLI import *
+from eclometer.interfaces.utilCLI import *
 
 
 class runTest():
@@ -100,9 +100,10 @@ class runTest():
 
 
 if __name__ == '__main__':
+    cwd = os.path.abspath(os.path.dirname(__file__))
 
     # Load default values from configuration file  
-    defaults =  jsonLoadFromFile('defaults.json') #'defaults.json')
+    defaults =  jsonLoadFromFile(os.path.join(cwd,'defaults.json')) #'defaults.json')
     #print (defaults)
    
     parser = argparse.ArgumentParser(prog=os.path.basename(__file__), 
