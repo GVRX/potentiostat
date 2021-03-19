@@ -1,0 +1,1 @@
+/Users/gvanriessen/anaconda3/lib/python3.7/site-packages/iorodeo_potentiostat-0.0.3-py3.7.egg

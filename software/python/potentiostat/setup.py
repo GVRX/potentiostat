@@ -86,10 +86,7 @@ setup(
     install_requires=['pyserial',
                       'progressbar33',
                       'argparse',
-                      'json',
+                      'json-python-module',
                       'json_tricks',
-                      'os',
-                      'atexit',
-                      'contextlib',
-                      're'],
+                      ],
 )

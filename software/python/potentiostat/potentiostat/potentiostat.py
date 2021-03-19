@@ -30,16 +30,15 @@ import contextlib
 import progressbar
 import os
 import re
+from .plots import *
+from drawnow import drawnow, figure
+
 
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
 
-# added gvr    
-import numpy as np
-import matplotlib.pyplot as plt
-plt.style.use('ggplot')
 
 # Json message keys
 CommandKey = 'command'
@@ -534,9 +533,9 @@ class Potentiostat(serial.Serial):
                 self.scanRate = (4*1000 * param['amplitude'] ) / param ['period']  #period [ms] to V/s
                 rsp = self.set_ScanRate( self.scanRate ) 
 
-                self.testDuration = param['amplitude'] / self.scanRate
+                self.testDuration = np.abs(param['amplitude']) / self.scanRate
                 self.testLength = int(self.testDuration * 1000)  #!!! Hardcoded in firmware too !!! TODO: change in firmware and here.
-
+                #print('Length: ', self.testLength)
                 return rsp   # not ideal to return response from last command  -  fix todo 
 
         else:    
@@ -837,13 +836,13 @@ class Potentiostat(serial.Serial):
             pbar = progressbar.ProgressBar(widgets=widgets,maxval=test_done_tval)
             pbar.start()
 
-        if display == 'plot':    # added GVR
-            size = self.testLength
-            x_vec = []
-            y_vec = []
-            line1 = []
-            
+        
         data_dict = {chan:{TimeKey:[],VoltKey:[],CurrKey:[],PhotoCurrKey:[]} for chan in channel_list}  # added PhotoCurr
+
+        if display == 'plot':    # added GVR
+            plotActive = livePlot(data_dict)
+            figure(figsize=(7, 7/2))
+            
 
         # Determine output file type and open if required
         if filename is not None:
@@ -928,7 +927,7 @@ class Potentiostat(serial.Serial):
                 if (filename is not None) and (output_filetype == TxtOutputFileType):
                     if chan == 0:
                         #fid.write('{0:1.3f}, {1:1.4f}, {2:1.4f}\n'.format(tval,volt,curr))
-                        fid.write('{},{},{},{}'.format(tval,volt,curr,phot))
+                        fid.write('{},{},{},{}\n'.format(tval,volt,curr,phot))
                     else:
                         fid.write('{0}, {1:1.3E}, {2:1.4E}, {3:1.4E}, {3:1.4E}\n'.format(chan,tval,volt,curr,phot))
 
@@ -941,12 +940,14 @@ class Potentiostat(serial.Serial):
                         print('ch{0}: {1:1.3f}, {2:1.4f}, {3:1.4f}, {3:1.4f}'.format(chan,tval,volt,curr,phot))
 
                 if display == 'plot':
-                    if chan == 0:
-                        y_vec.append(sample_dict[self.measure[2]])
-                        x_vec.append(sample_dict[self.measure[0]])
-                        line1 = live_plotter(x_vec,y_vec,line1,identifier='',ylabel=self.measure[2],xlabel=self.measure[0])
-                    else:
-                        pass # case not implemented
+                    plotActive.data =  data_dict   # need to append not replace!
+                    drawnow(plotActive.draw, stop_on_close=True)
+                    # if chan == 0:
+                    #     y_vec.append(sample_dict[self.measure[2]])
+                    #     x_vec.append(sample_dict[self.measure[0]])
+                    #     #line1 = live_plotter(x_vec,y_vec,line1,identifier='',ylabel=self.measure[2],xlabel=self.measure[0])
+                    # else:
+                    #     pass # case not implemented
                     
                 elif display == 'pbar':
                     pbar.update(tval)
@@ -1102,112 +1103,3 @@ class Potentiostat(serial.Serial):
             self.close()
             print ('done.')
 
-def avgData(data,avgN=10):   #added DE. GVR moved hardcoded value to param.  TODO: replace with numpy method
-    for d in ['v','i','t','l']:
-        dlen = len(data[d])
-        if dlen>avgN:
-            for i in range(dlen-avgN):
-                data[d][i] = sum(data[d][i:i+avgN])/avgN
-        data[d] = data[d][:dlen-avgN]
-
-
-
-def plotData(data, smooth=1):
-
-    if smooth> 1:
-       avgData(data,smooth) 
-
-    if len(data['v']) == len(data['i']) == len(data['t']):
-            plt.figure(1)
-            plt.subplot(211)
-            plt.plot(data['t'],data['v'])
-            plt.ylabel('potential (V)')
-            plt.grid('on')
-
-            plt.subplot(212)
-            plt.plot(data['t'],data['i'])
-            plt.ylabel('current (uA)')
-            plt.xlabel('time (s)')
-            plt.grid('on')
-
-            # plt.figure(2)
-            # plt.plot(data['v'],data['i'])
-            # plt.xlabel('potential (V)')
-            # plt.ylabel('current (uA)')
-            # plt.grid('on')
-
-            plt.show() #(block=False)
-
-
-    if len(data['v']) == len(data['l']) == len(data['t']):
-            plt.figure(1)
-            plt.subplot(211)
-            plt.plot(data['t'],data['v'])
-            plt.ylabel('potential (V)')
-            plt.grid('on')
-
-            plt.subplot(212)
-            plt.plot(data['t'],data['l'])
-            plt.ylabel('photocurrent (a.u.)')
-            plt.xlabel('time (s)')
-            plt.grid('on')
-
-            plt.figure(2)
-            plt.plot(data['v'],data['l'])
-            plt.xlabel('potential (V)')
-            plt.ylabel('photocurrent (uA)')
-            plt.grid('on')
-
-            plt.show() #(block=False)
-
-    if len(data['l']) == len(data['i']) == len(data['t']):
-
-            plt.figure(1)
-            plt.subplot(211)
-            plt.plot(data['t'],data['l'])
-            plt.ylabel('photocurrent (a.u.)')
-            plt.grid('on')
-
-            plt.subplot(212)
-            plt.plot(data['t'],data['i'])
-            plt.ylabel('current (uA)')
-            plt.xlabel('time (s)')
-            plt.grid('on')
-
-            plt.figure(2)
-            plt.plot(data['i'],data['l'])
-            plt.xlabel('current (uA)')
-            plt.ylabel('photocurrent (a.u.)')
-            plt.grid('on')        
-
-            plt.show() #(block=False)
-
-
-
-def live_plotter(x_vec,y1_data,line1,identifier='',ylabel='',xlabel='',pause_time=0.05):
-    if line1==[]:
-        # this is the call to matplotlib that allows dynamic plotting
-        plt.ion()
-        fig = plt.figure(figsize=(13,6))
-        ax = fig.add_subplot(111)
-        # create a variable for the line so we can later update it
-        line1, = ax.plot(x_vec,y1_data,'-o',alpha=0.8)        
-        #update plot label/title
-        plt.ylabel(ylabel)
-        plt.xlabel(xlabel)
-        plt.title(identifier)
-        plt.show()
-    
-    # after the figure, axis, and line are created, we only need to update the y-data
-    line1.set_ydata(y1_data)
-    # adjust limits if new data goes beyond bounds
-    #if np.min(y1_data)<=line1.axes.get_ylim()[0] or np.max(y1_data)>=line1.axes.get_ylim()[1]:
-    #    plt.ylim([np.min(y1_data)-np.std(y1_data),np.max(y1_data)+np.std(y1_data)])
-    #if np.min(y1_data)<=line1.axes.get_ylim()[0] or np.max(y1_data)>=line1.axes.get_ylim()[1]:
-    #    plt.ylim([np.min(y1_data),np.max(y1_data)])
-    
-    # this pauses the data so the figure/axis can catch up - the amount of pause can be altered above
-    plt.pause(pause_time)
-    
-    # return line so we can update it again in the next iteration
-    return line1

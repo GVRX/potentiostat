@@ -1,6 +1,6 @@
 {
     "port"           : "/dev/tty.usbmodem65156601",
-    "dataFileName"   : "ecl_%d.txt",    # %d will be substituted with run counter
+    "dataFileName"   : "ecl_%d.txt",    # %d will be substituted with run counter. Use txt or pkl (pickle) extension.
     "testName"       : "cyclic",
     "numRep"         : 1,
     "VMin"           : -1.0,            # minimum voltage in waveform (V)
