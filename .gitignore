@@ -28,3 +28,4 @@ software/python/potentiostat/potentiostat/scratch/pyqtgraphTest.py
 *.whl
 software/python/potentiostat/potentiostat/pyformulastest.py
 software/python/potentiostat/potentiostat/scratch/pyformulastest.py
+bridge/serial_bridge/

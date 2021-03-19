@@ -118,6 +118,23 @@ For help on using input parameter files and arguments that control the device, e
 runECL.py --help
 ```
 
+All parameters can be set from parameter file (-F flag), individual CLI arguments, or both.  CLI arguments override parameters loaded from file. Examples:
+
+The command:
+
+        ```runECL.py -F immunoAssay1.json --plot --smooth 20```
+
+will run the experiment defined in immunoAssay1.json, plot the data and smooth it with a smoothing width of 20 samples.
+
+The command:
+
+        ```runECL.py -F immunoAssay1.json --HV 1100```
+
+will run the experiment defined in immunoAssay1.json with the PMT HV voltage at 1100 V, overriding the HV value in immunoAssay1.json
+    
+
+
+
 ### Graphical User Interface (GUI)
 
 The GUI can be run using:
