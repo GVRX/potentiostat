@@ -12,14 +12,13 @@ potentiostat
     requiring some packaging/unpackaging of messages and responses to maintain compatibilty
     with original implementation. Handled by a 'raw mode' of communication.
 
-    
+    ** Code is under development **
 
     :copyright: (c) 2017 by IO Rodeo 
     :license: MIT, see LICENSE.txt for more details.
 
 
     Modified by Grant van Riessen, 2021
-    NOT RELEASED - IN DEVELOPMENT
 """
 from __future__ import print_function
 import serial
