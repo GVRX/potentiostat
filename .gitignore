@@ -15,3 +15,9 @@ software/javascript/app/dist
 _build
 node_modules
 rescue-backup
+software/python/potentiostat/examples/scratch/emitterTest.py
+software/python/potentiostat/examples/scratch/ecl_1.txt
+software/python/potentiostat/examples/scratch/drawnowtest.py
+software/python/potentiostat/examples/emitterTest.py
+software/python/potentiostat/examples/drawnowtest.py
+software/python/potentiostat/examples/drawnowtest.py
