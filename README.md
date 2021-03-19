@@ -14,7 +14,7 @@ Under development:
 
 
 The python components are available on the 
-`Python Package Index <https://pypi.org/project/eclometer/>`_ and can be
+Python Package Index <https://pypi.org/project/eclometer/> and can be
 installed using PIP as follows:
 
 ```pip install eclometer```
@@ -29,7 +29,7 @@ pip install -e potentiostat/software/python/potentiostat/
 ```
 
 
-Beware: The GUI is based on Gooey that depends on wxPython which does not install reliably across different platforms and package managers (see `Issue <https://github.com/chriskiehl/Gooey/issues/661/>`).  
+Beware: The GUI is based on Gooey that depends on wxPython which does not install reliably across different platforms and package managers (see Issue <https://github.com/chriskiehl/Gooey/issues/661/>).  
 
 
 
@@ -114,21 +114,19 @@ You can even make runECL.py executable and add the path <ecl installation path>/
 
 For help on using input parameter files and arguments that control the device, experiment and output optoins, use the command:
 
-```
-runECL.py --help
-```
+```runECL.py --help```
 
 All parameters can be set from parameter file (-F flag), individual CLI arguments, or both.  CLI arguments override parameters loaded from file. Examples:
 
 The command:
 
-        ```runECL.py -F immunoAssay1.json --plot --smooth 20```
+```runECL.py -F immunoAssay1.json --plot --smooth 20```
 
 will run the experiment defined in immunoAssay1.json, plot the data and smooth it with a smoothing width of 20 samples.
 
 The command:
 
-        ```runECL.py -F immunoAssay1.json --HV 1100```
+```runECL.py -F immunoAssay1.json --HV 1100```
 
 will run the experiment defined in immunoAssay1.json with the PMT HV voltage at 1100 V, overriding the HV value in immunoAssay1.json
     
@@ -143,7 +141,7 @@ The GUI can be run using:
 
 or, with the same path considerations as for runECL.py, simply:
 
-'''guiECL.py```
+```guiECL.py```
 
 On some platforms you may need to use `pythonw` instead of `python`.
 
@@ -169,7 +167,7 @@ A quasi-JSON format is used.  Comments (python style, starting with #) are allow
 
 (todo: documentation)
 
-## Installation
+## Firmware
 
 (todo: documentation)
 
