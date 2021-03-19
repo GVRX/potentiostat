@@ -28,12 +28,18 @@ def avgData(data,avgN=10):   #added DE. GVR moved hardcoded value to param.  TOD
                 data[d][i] = sum(data[d][i:i+avgN])/avgN
         data[d] = data[d][:dlen-avgN]
 
+def smoothData(data,span):
+    for k in data.keys():
+        smooth(data[k],span)
 
+def smooth(arr, span):
+    return np.convolve(arr, np.ones(span * 2 + 1) / (span * 2 + 1), mode="same")
 
 def plotData(data, smooth=1):
 
     if smooth> 1:
-       avgData(data,smooth) 
+       #avgData(data,smooth) 
+       smoothData(data,smooth)
 
     if len(data['v']) == len(data['i']) == len(data['t']):
             plt.figure(1)
