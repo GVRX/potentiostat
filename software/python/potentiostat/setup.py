@@ -7,17 +7,23 @@ board.  Based upon the IO Rodeostat potentiometer (Will Dickson, http://stuff.io
 
 
 """
+
+
+
 from setuptools import setup, find_packages
 from os import path
 
 here = path.abspath(path.dirname(__file__))
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='eclometer',
-    version='0.0.1',
+    version='0.0.2',
     description='ECLometer serial interface, CLI and GUI app.',
     long_description=__doc__,
-    url='https://bitbucket.org/iorodeo/potentiostat',
+    url='https://github.com/GVRX/potentiostat',
     author='Grant van Riessen  et al.',
     author_email='g.vanriessen@latrobe.edu.au',
     license='MIT',
@@ -49,13 +55,11 @@ setup(
     install_requires=['pyserial',
                       'progressbar33',
                       'argparse',
-                      'json-python-module',  #added gvr
-                      'json_tricks',    #added gvr
-                      'drawnow',  #added gvr
-                      'matplotlib',  #added gvr
-                      'numpy',  #added gvr
-                      'gooey',  #added gvr
-                      'pylab',  #added gvr
-                      'matplotlib'  #added gvr
+                      'json-python-module',  
+                      'json_tricks',
+                      'drawnow', 
+                      'matplotlib',
+                      'numpy',  
+                      'gooey', 
                       ],
 )
