@@ -209,7 +209,8 @@ if __name__ == '__main__':
     group.add_argument('--data', action='store_true', help='Write data to stdout')
     group.add_argument('--live', action='store_true', help='Live plot data (beta!)')
     group.add_argument('--progress', action='store_true', help='Display progress bar')
-    group.add_argument('--debug', action='store_true', help='Use debugging mode for ECL test.')
+    
+    parser.add_argument('--debug', action='store_true', help='Use debugging mode for ECL test.')
 
 
     args = parser.parse_args() 
@@ -231,6 +232,6 @@ if __name__ == '__main__':
     
 
 
-    #print(params)
+    print(params)
     runTest(params) 
     

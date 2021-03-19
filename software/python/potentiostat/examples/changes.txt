@@ -1,0 +1,35 @@
+
+
+Common features CLI and GUI:
+
+-- early check of serial port.  Lists valid serial ports upon error.
+-- default values for all parameters are stored in defaults.json. 
+
+
+CLI specific features:
+-- all parameters can be set from parameter file (-F flag), individual CLI arguments, or both.  
+   CLI arguments override parameters loaded from file. Examples:
+
+   The command:
+        runECL.py -F immunoAssay1.json --plot --smooth 20
+   will run the experiment defined in immunoAssay1.json, plot the data and smooth it with a smoothing width of 20 samples.
+
+   The command:
+        runECL.py -F immunoAssay1.json --HV 1100
+   will run the experiment defined in immunoAssay1.json with the PMT HV voltage at 1100 V, instead of the value in immunoAssay1.json
+    
+
+Default Congiguration File:
+
+Device and test default parameters are stored in defaults.ini and loaded when runECL or guiECL are run.
+
+It is recommended that you change the port here to avoid specifing it each time you run the CLI or GUI.
+
+A quasi-JSON format is used.  Comments (python style, starting with #) are allowed.
+
+Test Configuration File:
+
+Test configuration files may contain any subset of parameters that appear in defaults.ini.  This can be used to specify the
+configuration of a commonly used test.
+
+A quasi-JSON format is used.  Comments (python style, starting with #) are allowed.
