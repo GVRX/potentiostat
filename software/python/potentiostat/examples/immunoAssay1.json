@@ -1,3 +1,4 @@
+# Defines an experiment
 {
     "port"           : "/dev/tty.usbmodem65156601",
     "dataFileName"   : "ecl_%d.txt",    # %d will be substituted with run counter. Use txt or pkl (pickle) extension.
