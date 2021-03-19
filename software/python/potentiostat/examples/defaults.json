@@ -9,11 +9,11 @@
     "rate"           : 1.0,             # scan rate (V/s)
     "gain"           : 0.0,             # ADC gain for I, V measurement (= 0.0, 1.0, ... ????)
     "shift"          : 0,               # Waveform phase shift - expressed as [0,1] number, 0 = no phase shift, 0.5 = 180 deg phase shift, etc.
-    "HV"             : 400,             # PMT HV setting for tests.  400 V is low enough to be safe with ambient lighting, just high enough to observe signal
-    "measure"        : "IP",            # specificies what quantities are measured (= IP, IV or PV)
+    "HV"             : 0,             # PMT HV setting for tests.  400 V is low enough to be safe with ambient lighting, just high enough to observe signal
+    "measure"        : "IV",            # specificies what quantities are measured (= IP, IV or PV)
     "quietValue"     : 0.0,             # ignored in current version of ECL firmware
     "quietTime"      : 0,               # ignored in current version of ECL firmware
-    "debug"          : "False",           # Enable/disable output of debugging messages
+    "debug"          : "False",         # Enable/disable output of debugging messages
     "smooth"         : 10,              # smoothing width, applied to all data obtained 
     "plot"           : "True",
     "live"           : "False",
