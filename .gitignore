@@ -21,3 +21,7 @@ software/python/potentiostat/examples/scratch/drawnowtest.py
 software/python/potentiostat/examples/emitterTest.py
 software/python/potentiostat/examples/drawnowtest.py
 software/python/potentiostat/examples/drawnowtest.py
+software/python/potentiostat/potentiostat/scratch/gooeyTest.py
+software/python/potentiostat/potentiostat/scratch/gooeyTest2.py
+software/python/potentiostat/potentiostat/scratch/mpltest.py
+software/python/potentiostat/potentiostat/scratch/pyqtgraphTest.py
