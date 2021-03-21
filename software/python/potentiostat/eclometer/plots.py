@@ -30,9 +30,10 @@ fig = plt.figure()
  """
 def smoothData(data,span):
     for k in data.keys():
-        smooth(data[k],span)
+        data[k] = smooth(data[k],span)
+    return data
 
-def smooth(arr, span):
+def smooth(arr, span=2):
     return np.convolve(arr, np.ones(span * 2 + 1) / (span * 2 + 1), mode="same")
 
 def plotData(data, smooth=1):

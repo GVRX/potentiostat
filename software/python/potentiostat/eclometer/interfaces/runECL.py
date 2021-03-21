@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from eclometer.potentiostat import Potentiostat
+from eclometer.plots import *
 import argparse 
 import json
 import os
@@ -16,7 +17,7 @@ class runTest():
         self.opt = options
         
         if self.checkPort() == True: 
-            self.dev = potentiostat.Potentiostat(self.opt['port'],
+            self.dev = Potentiostat(self.opt['port'],
                                                 raw=True,     # required for ECL firmware (version 0.x)
                                                 debug=self.opt['debug'])
             self.counter = 0
@@ -95,7 +96,7 @@ class runTest():
 
     def plot(self):
         # Plot combinations of values contained in argument data.
-        potentiostat.plotData(self.data, smooth = self.opt['smooth'])
+        plotData(self.data, smooth = self.opt['smooth'])
 
 
 
