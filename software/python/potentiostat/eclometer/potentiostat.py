@@ -798,7 +798,6 @@ class Potentiostat(serial.Serial):
 
         """
 
-        # repeating a test seems to fail... try to stop first - probably not required.
         self.stop_test()
 
         mux_enabled = False
@@ -884,7 +883,7 @@ class Potentiostat(serial.Serial):
                     except:
                         sample_dict = {}
                    
-                    samples =+1
+                    samples += 1
                    
                     if self.debug:
                         print("Sample dictionary: ",sample_dict)

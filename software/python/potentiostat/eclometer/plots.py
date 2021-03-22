@@ -20,14 +20,14 @@ plt.style.use('ggplot')
 
 fig = plt.figure()
 
-""" def avgData(data,avgN=10):   #added DE. GVR moved hardcoded value to param.  TODO: replace with numpy method
+def avgData(data,avgN=10):   #added DE. GVR moved hardcoded value to param.  TODO: replace with numpy method
     for d in ['v','i','t','l']:
         dlen = len(data[d])
         if dlen>avgN:
             for i in range(dlen-avgN):
                 data[d][i] = sum(data[d][i:i+avgN])/avgN
         data[d] = data[d][:dlen-avgN]
- """
+
 def smoothData(data,span):
     for k in data.keys():
         data[k] = smooth(data[k],span)
@@ -39,8 +39,8 @@ def smooth(arr, span=2):
 def plotData(data, smooth=1):
 
     if smooth> 1:
-       #avgData(data,smooth) 
-       smoothData(data,smooth)
+       avgData(data,smooth) 
+       #smoothData(data,smooth)
 
     if len(data['v']) == len(data['i']) == len(data['t']):
             plt.figure(1)
@@ -51,14 +51,14 @@ def plotData(data, smooth=1):
 
             plt.subplot(212)
             plt.plot(data['t'],data['i'])
-            plt.ylabel('current (uA)')
+            plt.ylabel('current (A)')
             plt.xlabel('time (s)')
             plt.grid('on')
 
             plt.figure(2)
             plt.plot(data['v'],data['i'])
             plt.xlabel('potential (V)')
-            plt.ylabel('current (uA)')
+            plt.ylabel('current (A)')
             plt.grid('on')
 
             plt.show() #(block=False)
@@ -69,7 +69,7 @@ def plotData(data, smooth=1):
             plt.figure(1)
             plt.plot(data['v'],data['l'])
             plt.xlabel('potential (V)')
-            plt.ylabel('photocurrent (uA)')
+            plt.ylabel('photocurrent (A)')
             plt.grid('on')
             
             plt.figure(2)
@@ -80,7 +80,7 @@ def plotData(data, smooth=1):
 
             plt.subplot(212)
             plt.plot(data['t'],data['l'])
-            plt.ylabel('photocurrent (a.u.)')
+            plt.ylabel('photocurrent (A)')
             plt.xlabel('time (s)')
             plt.grid('on')
 
@@ -93,19 +93,19 @@ def plotData(data, smooth=1):
             plt.figure(1)
             plt.subplot(211)
             plt.plot(data['t'],data['l'])
-            plt.ylabel('photocurrent (a.u.)')
+            plt.ylabel('photocurrent (A)')
             plt.grid('on')
 
             plt.subplot(212)
             plt.plot(data['t'],data['i'])
-            plt.ylabel('current (uA)')
+            plt.ylabel('current (A)')
             plt.xlabel('time (s)')
             plt.grid('on')
 
             plt.figure(2)
             plt.plot(data['i'],data['l'])
-            plt.xlabel('current (uA)')
-            plt.ylabel('photocurrent (a.u.)')
+            plt.xlabel('current (A)')
+            plt.ylabel('photocurrent (A)')
             plt.grid('on')        
 
             #plt.pause(0.001)
@@ -134,14 +134,14 @@ class livePlot():
 
                 plt.subplot(212)
                 plt.plot(data['t'],data['i'])
-                plt.ylabel('current (uA)')
+                plt.ylabel('current (A)')
                 plt.xlabel('time (s)')
                 plt.grid('on')
 
                 plt.figure(2)
                 plt.plot(data['v'],data['i'])
                 plt.xlabel('potential (V)')
-                plt.ylabel('current (uA)')
+                plt.ylabel('current (A)')
                 plt.grid('on')
 
                 plt.show() #(block=False)
@@ -152,7 +152,7 @@ class livePlot():
                 plt.figure(1)
                 plt.plot(data['v'],data['l'])
                 plt.xlabel('potential (V)')
-                plt.ylabel('photocurrent (uA)')
+                plt.ylabel('photocurrent (A)')
                 plt.grid('on')
                 
                 plt.figure(2)
@@ -163,7 +163,7 @@ class livePlot():
 
                 plt.subplot(212)
                 plt.plot(data['t'],data['l'])
-                plt.ylabel('photocurrent (a.u.)')
+                plt.ylabel('photocurrent (A)')
                 plt.xlabel('time (s)')
                 plt.grid('on')
 
@@ -176,19 +176,19 @@ class livePlot():
                 plt.figure(1)
                 plt.subplot(211)
                 plt.plot(data['t'],data['l'])
-                plt.ylabel('photocurrent (a.u.)')
+                plt.ylabel('photocurrent (A)')
                 plt.grid('on')
 
                 plt.subplot(212)
                 plt.plot(data['t'],data['i'])
-                plt.ylabel('current (uA)')
+                plt.ylabel('current (A)')
                 plt.xlabel('time (s)')
                 plt.grid('on')
 
                 plt.figure(2)
                 plt.plot(data['i'],data['l'])
-                plt.xlabel('current (uA)')
-                plt.ylabel('photocurrent (a.u.)')
+                plt.xlabel('current (A)')
+                plt.ylabel('photocurrent (A)')
                 plt.grid('on')        
 
                 plt.pause(0.001)
