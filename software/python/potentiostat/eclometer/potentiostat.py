@@ -861,7 +861,10 @@ class Potentiostat(serial.Serial):
         msg_dict = self.send_cmd(cmd_dict)
         self.test_running = True
 
+        print ('Estimated time for test: ',format(self.testDuration))
+
         done = False
+        samples = 0
         endPattern = re.compile("EndOfTest")   # DE 15.3   GVR todo: modify to avoid exceptional handling of endoftest
         while not done: 
          
@@ -880,7 +883,9 @@ class Potentiostat(serial.Serial):
                             sample_dict[key] = vals.pop(0)
                     except:
                         sample_dict = {}
-
+                   
+                    samples =+1
+                   
                     if self.debug:
                         print("Sample dictionary: ",sample_dict)
 
@@ -937,6 +942,11 @@ class Potentiostat(serial.Serial):
                         #print(f'{tval:9.4f, volt:9.4f, curr:9.4f\n}')
                     else:
                         print('ch{0}: {1:1.3f}, {2:1.4f}, {3:1.4f}, {3:1.4f}'.format(chan,tval,volt,curr,phot))
+                else:
+                    #display minimal progress information:
+                    print('Sample: {} of {}'.format(samples,self.testLength),end="\r")
+
+
 
                 if display == 'plot':
                     plotActive.data =  data_dict   # need to append not replace!

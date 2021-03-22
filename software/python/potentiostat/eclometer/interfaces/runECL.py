@@ -80,14 +80,15 @@ class runTest():
 
         
         for i in range(0,self.opt['numRepeat']):
-            print('i = {0}/{1}'.format(i+1,self.opt['numRepeat']))
             print()
-            self.counter += 1
+            print('Starting test {0} of {1}'.format(i+1,self.opt['numRepeat']))
             self.data = self.dev.run_test(self.opt['testName'],      
                                 param,  
                                 display = disp,  
                                 filename = self.opt['dataFileName'] % self.counter)           
+            self.counter += 1
             print()
+            print('Completed test {0} of {1}'.format(i+1,self.opt['numRepeat']))
 
             #print (self.opt)
             if self.opt['plot']:
