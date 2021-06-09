@@ -69,7 +69,7 @@ def plotData(data, smooth=1):
             plt.figure(1)
             plt.plot(data['v'],data['l'])
             plt.xlabel('potential (V)')
-            plt.ylabel('photocurrent (A)')
+            plt.ylabel('photocurrent (%%FSD)')
             plt.grid('on')
             
             plt.figure(2)
@@ -80,7 +80,7 @@ def plotData(data, smooth=1):
 
             plt.subplot(212)
             plt.plot(data['t'],data['l'])
-            plt.ylabel('photocurrent (A)')
+            plt.ylabel('photocurrent (%%FSD)')
             plt.xlabel('time (s)')
             plt.grid('on')
 
@@ -93,7 +93,7 @@ def plotData(data, smooth=1):
             plt.figure(1)
             plt.subplot(211)
             plt.plot(data['t'],data['l'])
-            plt.ylabel('photocurrent (A)')
+            plt.ylabel('photocurrent (%%FSD)')
             plt.grid('on')
 
             plt.subplot(212)
@@ -105,7 +105,7 @@ def plotData(data, smooth=1):
             plt.figure(2)
             plt.plot(data['i'],data['l'])
             plt.xlabel('current (A)')
-            plt.ylabel('photocurrent (A)')
+            plt.ylabel('photocurrent (%%FSD)')
             plt.grid('on')        
 
             #plt.pause(0.001)

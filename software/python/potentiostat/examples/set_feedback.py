@@ -1,5 +1,5 @@
 from __future__ import print_function
-from potentiostat import Potentiostat
+from eclometer.potentiostat import Potentiostat
 import sys
 
 if len(sys.argv) > 1:

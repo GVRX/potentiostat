@@ -1,22 +1,26 @@
 {
-    "port"           : "/dev/tty.usbmodem65156601",
+    "port"           : "/dev/cu.usbmodem90548901",
     "dataFileName"   : "ecl_%d.txt",    # %d will be substituted with run counter
     "testName"       : "cyclic",
     "numRep"         : 1,               # the numer of times the test will be repeated 
-    "numCycles"      : 1,               # the number of waveform cycles (generally on device)
-    "VMin"           : 0,               # minimum voltage in waveform (V)
-    "VMax"           : 1,               # maximum voltage in waveform (V)
-    "rate"           : 1.0,             # scan rate (V/s)
+    "Cycles"      : 1,               # the number of waveform cycles (generally on device)
+    "E0"             : 0.01,             # prescan potential
+    "E1"             : -0.5,            # start potential
+    "E2"             : 0.5,             #
+    "E3"             : 0.0,             #
+    "T0"             : 0,               # prescan time 
+    "T1"             : 1.0,             #
+    "T2"             : 1.0,             # 
+    "T3"             : 1.0,             #        
+    "rate"           : 0.5,             # scan rate (V/s)
+    "period"         : 1.0e-3,          # sample period (s)   
     "gain"           : 0.0,             # ADC gain for I, V measurement (= 0.0, 1.0, ... ????)
-    "shift"          : 0,               # Waveform phase shift - expressed as [0,1] number, 0 = no phase shift, 0.5 = 180 deg phase shift, etc.
-    "HV"             : 0,             # PMT HV setting for tests.  400 V is low enough to be safe with ambient lighting, just high enough to observe signal
+    "HV"             : 0,               # PMT HV setting for tests.  400 V is low enough to be safe with ambient lighting, just high enough to observe signal
     "measure"        : "IV",            # specificies what quantities are measured (= IP, IV or PV)
-    "quietValue"     : 0.0,             # ignored in current version of ECL firmware
-    "quietTime"      : 0,               # ignored in current version of ECL firmware
     "debug"          : "False",         # Enable/disable output of debugging messages
-    "smooth"         : 10,              # smoothing width, applied to all data obtained 
+    "smooth"         : 10,              # smoothing width for plots
     "plot"           : "True",
     "live"           : "False",
     "data"           : "False",
-    "progress"       : "False"   
+    "progress"       : "False"
 }

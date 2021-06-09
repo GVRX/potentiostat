@@ -20,7 +20,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='eclometer',
-    version='0.0.2',
+    version='0.0.3',
     description='ECLometer serial interface, CLI and GUI app.',
     long_description=__doc__,
     url='https://github.com/GVRX/potentiostat',

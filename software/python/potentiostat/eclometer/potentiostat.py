@@ -31,6 +31,8 @@ import os
 import re
 from .plots import *
 from drawnow import drawnow, figure
+import string
+from eclometer.interfaces.util import PartialFormatter
 
 
 try:
@@ -38,190 +40,8 @@ try:
 except ImportError:
     import pickle
 
+from eclometer.protocol import *
 
-# Json message keys
-CommandKey = 'command'
-ResponseKey = 'response'
-MessageKey = 'message'
-SuccessKey = 'success'
-TestKey = 'test'
-ParamKey = 'param'
-TimeKey = 't'
-VoltKey = 'v'
-CurrKey = 'i'
-PhotoCurrKey = 'l' # added GVR
-CellKey = 'cell' # added GVR
-FeedbackKey = 'feedback' # added GVR
-MeasureKey = 'measure' # added GVR
-SamplesKey = 'samples' # added GVR
-GainKey = 'gain' # added GVR
-HVKey = 'HV' # added GVR
-HVEnableKey = 'HVEnable' # GVR
-VStartKey = "Vstart" # GVR
-VEndKey = 'Vend' # GVR
-ScanRateKey = 'scanrate' #GVR
-StopTestKey = 'stop'
-
-
-ChanKey = 'n'
-RefVoltKey = 'r'
-VoltRangeKey = 'voltRange'
-CurrRangeKey = 'currRange'
-DeviceIdKey = 'deviceId'
-SamplePeriodKey = 'samplePeriod'
-TestDoneTimeKey = 'testDoneTime'
-StepArrayKey = 'step'
-TestNameArrayKey = 'testNames'
-VersionKey = 'version'
-VariantKey = 'variant'
-MuxEnabledKey = 'muxEnabled'
-MuxChannelKey = 'muxChannel'
-ConnectedKey = 'connected'
-
-# Commands
-RunTestCmd  = 'runTest'
-StopTestCmd = 'stopTest'
-GetVoltCmd = 'getVolt'
-SetVoltCmd = 'setVolt'
-GetCurrCmd = 'getCurr'
-GetPhotoCurrCmd = 'getPhotoCurr' # added GVR
-GetCellCmd = 'getCell'  #addedGVR
-SetCellCmd = 'setCell'  #added GVR
-GetFeedbackCmd = 'getFeedback' # GVR
-SetFeedbackCmd = 'setFeedback' # GVR
-SetMeasureCmd = 'setMeasure' # GVR
-SetSamplesCmd  = 'setSamples' # GVR
-SetGainCmd = 'setGain' #GVR
-GetGainCmd = 'getGain' #GVR 
-SetHVCmd = 'setHV' #GVR
-GetHVCmd = 'getHV' #GVR
-SetHVEnableCmd = 'setHVenable' # GVR
-GetHVEnableCmd = 'getHVenable' # GVR
-SetVStartCmd = 'setVstart' # GVR
-GetVStartCmd = 'getVstart' # GVR
-SetVEndCmd = 'setVend' # GVR
-GetVEndCmd = 'getVend' # GVR
-SetScanRateCmd = 'setScanrate' # GVR
-GetScanRateCmd = 'getScanrate' # GVR
-
-
-GetRefVoltCmd = 'getRefVolt'
-GetParamCmd = 'getParam'
-SetParamCmd = 'setParam'
-GetVoltRangeCmd = 'getVoltRange'
-SetVoltRangeCmd = 'setVoltRange'
-GetCurrRangeCmd = 'getCurrRange'
-SetCurrRangeCmd = 'setCurrRange'
-GetDeviceIdCmd = 'getDeviceId'
-SetDeviceIdCmd = 'setDeviceId'
-GetSamplePeriodCmd = 'getSamplePeriod'
-SetSamplePeriodCmd = 'setSamplePeriod'
-GetTestDoneTimeCmd = 'getTestDoneTime'
-GetTestNamesCmd = 'getTestNames'
-GetVersionCmd = 'getVersion'
-GetVariantCmd = 'getVariant'
-SetMuxEnabledCmd = 'setMuxEnabled'
-GetMuxEnabledCmd = 'getMuxEnabled'
-SetEnabledMuxChanCmd = 'setEnabledMuxChannels'
-GetEnabledMuxChanCmd = 'getEnabledMuxChannels'
-GetMuxTestNamesCmd = 'getMuxTestNames'
-
-SetMuxRefElectConnCmd = "setMuxRefElectConnected"
-GetMuxRefElectConnCmd = "getMuxRefElectConnected"
-SetMuxCtrElectConnCmd = "setMuxCtrElectConnected"
-GetMuxCtrElectConnCmd = "getMuxCtrElectConnected"
-SetMuxWrkElectConnCmd = "setMuxWrkElectConnected"
-GetMuxWrkElectConnCmd = "getMuxWrkElectConnected"
-DisconnAllMuxElectCmd = "disconnectAllMuxElect"
-
-# Voltage ranges
-VoltRange1V = '1V'
-VoltRange2V = '2V'
-VoltRange4V = '4V'
-VoltRange5V = '5V'
-VoltRange8V = '8V'
-VoltRange10V = '10V'
-VoltRangeList_AD8250 = [VoltRange1V, VoltRange2V, VoltRange5V, VoltRange10V]
-VoltRangeList_AD8251 = [VoltRange1V, VoltRange2V, VoltRange4V, VoltRange8V]
-
-HwVariantToVoltRangesDict = {
-        'nanoAmpV0.1'         : VoltRangeList_AD8250, 
-        'microAmpV0.1'        : VoltRangeList_AD8250, 
-        'milliAmpV0.1'        : VoltRangeList_AD8250, 
-        'AD8250_nanoAmpV0.1'  : VoltRangeList_AD8250, 
-        'AD8250_microAmpV0.1' : VoltRangeList_AD8250, 
-        'AD8250_milliAmpV0.1' : VoltRangeList_AD8250, 
-        'AD8251_nanoAmpV0.1'  : VoltRangeList_AD8251,  
-        'AD8251_microAmpV0.1' : VoltRangeList_AD8251, 
-        'AD8251_milliAmpV0.1' : VoltRangeList_AD8251, 
-        }
-
-# Current Ranges
-CurrRange60nA = '60nA'
-CurrRange100nA = '100nA'
-CurrRange1uA = '1uA'
-CurrRange10uA = '10uA'
-CurrRange100uA = '100uA'
-CurrRange1000uA = '1000uA'
-CurrRange12000uA = '12000uA'
-CurrRange24000uA = '24000uA'
-
-CurrRangeListNanoAmp = [CurrRange1uA, CurrRange10uA, CurrRange100nA, CurrRange60nA]
-CurrRangeListMicroAmp = [CurrRange1uA, CurrRange10uA, CurrRange100uA, CurrRange1000uA]
-CurrRangeListMilliAmp = [CurrRange100uA, CurrRange1000uA, CurrRange12000uA, CurrRange24000uA]
-
-HwVariantToCurrRangesDict = {
-        'nanoAmpV0.1'         :  CurrRangeListNanoAmp,
-        'microAmpV0.1'        :  CurrRangeListMicroAmp, 
-        'milliAmpV0.1'        :  CurrRangeListMilliAmp,
-        'AD8250_nanoAmpV0.1'  :  CurrRangeListNanoAmp,
-        'AD8250_microAmpV0.1' :  CurrRangeListMicroAmp, 
-        'AD8250_milliAmpV0.1' :  CurrRangeListMilliAmp,
-        'AD8251_nanoAmpV0.1'  :  CurrRangeListNanoAmp,
-        'AD8251_microAmpV0.1' :  CurrRangeListMicroAmp, 
-        'AD8251_milliAmpV0.1' :  CurrRangeListMilliAmp,
-        }
-
-TimeUnitToScale = {'s': 1.e-3, 'ms': 1}
-
-MinimumFirmwareVersionForMux = '0.0.5'
-
-TxtOutputFileType = 0
-PklOutputFileType = 1
-
-
-
-#added GVR, for raw mode testing...
-cmdMap = {
-          GetVariantCmd:VariantKey,
-          GetVersionCmd:VersionKey,
-          SetVoltRangeCmd:VoltRangeKey,
-          SetCurrRangeCmd:CurrRangeKey,
-          SetVoltCmd: VoltKey,
-          GetVoltCmd: VoltKey,
-          GetCurrCmd: CurrKey,
-          GetPhotoCurrCmd: PhotoCurrKey,
-          GetCellCmd : CellKey,
-          SetCellCmd : CellKey,
-          GetFeedbackCmd : FeedbackKey,
-          SetFeedbackCmd : FeedbackKey,
-          SetMeasureCmd : MeasureKey,
-          SetSamplesCmd : SamplesKey,
-          SetGainCmd : GainKey,
-          GetGainCmd : GainKey,
-          SetHVCmd : HVKey,
-          GetHVCmd : HVKey,
-          SetHVEnableCmd : HVEnableKey,
-          GetHVEnableCmd : HVEnableKey,
-          GetVStartCmd : VStartKey,
-          SetVStartCmd : VStartKey,
-          GetVEndCmd : VEndKey,
-          SetVEndCmd : VEndKey,
-          GetScanRateCmd : ScanRateKey,
-          SetScanRateCmd : ScanRateKey,
-          StopTestCmd : StopTestKey,
-          RunTestCmd : TestKey
-         }
 
 
 
@@ -378,7 +198,8 @@ class Potentiostat(serial.Serial):
     
     #GVR added
     def set_samples(self, n):
-        """Set number of samples to measure """
+        """Set number of samples to measure 
+           Used only for Debug mode in V0.3 ECL firmware """
         cmd_dict = {CommandKey: SetSamplesCmd, SamplesKey: n}
         msg_dict = self.send_cmd(cmd_dict)
         rsp = msg_dict[ResponseKey][SamplesKey]
@@ -432,9 +253,108 @@ class Potentiostat(serial.Serial):
         rsp = msg_dict[ResponseKey][HVEnableKey]
         return rsp
 
+    def set_V0(self, V):
+        """Set V0 value
+        """
+        cmd_dict = {CommandKey: SetV0Cmd, V0Key: V}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][V0Key]
+        return rsp
+
+    def get_V0(self):
+        """Get V0 value
+        """
+        cmd_dict = {CommandKey: SetV0Cmd }
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][V0Key]
+        return rsp
+ 
+    def set_V1(self, V):
+        """Set V1 value
+        """
+        cmd_dict = {CommandKey: SetV1Cmd, V1Key: V}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][V1Key]
+        return rsp
+
+    def get_V1(self):
+        """Get V1 value
+        """
+        cmd_dict = {CommandKey: GetV1Cmd }
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][V1Key]
+        return rsp
+   
+    def set_V2(self, V):
+        """Set V2 value
+        """
+        cmd_dict = {CommandKey: SetV2Cmd, V2Key: V}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][V2Key]
+        return rsp
+    
+    def get_V2(self):
+        """Get V2 value
+        """
+        cmd_dict = {CommandKey: GetV2Cmd }
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][V2Key]
+        return rsp
+
+
+    def set_T0(self, T):
+        """Set T0 value"""
+        cmd_dict = {CommandKey: SetT0Cmd, T0Key: T}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][T0Key]
+        return rsp
+
+    def get_T0(self):
+        """Get T0 value
+        """
+        cmd_dict = {CommandKey: GetT0Cmd }
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][T0Key]
+        return rsp 
+ 
+    def set_T1(self, T):
+        """Set T1 value
+        """
+        cmd_dict = {CommandKey: SetT1Cmd, T1Key: T}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][T1Key]
+        return rsp
+
+    def get_T1(self):
+        """Get T1 value
+        """
+        cmd_dict = {CommandKey: GetT1Cmd }
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][T1Key]
+        return rsp 
+   
+    def set_T2(self, T):
+        """Set T2 value
+        """
+        cmd_dict = {CommandKey: SetT2Cmd, T2Key: T}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][T2Key]    
+
+    def get_T2(self):
+        """Get T2 value
+        """
+        cmd_dict = {CommandKey: GetT2Cmd }
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][T2Key]
+        return rsp 
+
     #GVR added
     def set_VStart(self, V):
-        """Set start voltage """
+        """Set start voltage 
+        
+           Deprecated, retained for compatibilty.
+           Use set_V1
+        """
         cmd_dict = {CommandKey: SetVStartCmd, VStartKey: V}
         msg_dict = self.send_cmd(cmd_dict)
         rsp = msg_dict[ResponseKey][VStartKey]
@@ -442,7 +362,11 @@ class Potentiostat(serial.Serial):
 
     #GVR added
     def get_VStart(self):
-        """Get start voltage  """
+        """Get start voltage  
+        
+        Deprecated, retained for compatibilty.
+        Use get_V1
+        """
         cmd_dict = {CommandKey: GetVStartCmd}
         msg_dict = self.send_cmd(cmd_dict)
         rsp = msg_dict[ResponseKey][VStartKey]
@@ -450,15 +374,31 @@ class Potentiostat(serial.Serial):
 
     #GVR added
     def get_VEnd(self):
-        """Get end voltage  """
+        """Get end voltage  
+        
+           Deprecated, retained for compatibilty.
+           Use get_V2
+        """
         cmd_dict = {CommandKey: GetVEndCmd}
         msg_dict = self.send_cmd(cmd_dict)
         rsp = msg_dict[ResponseKey][VEndKey]
         return rsp
+       
+    def get_PhotocurrentLimit(self):
+        """Get the photocurrent cutoff limit in ADC units
+        """
+        cmd_dict = {CommandKey: GetPhotoCurrLimitCmd}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][PhotoCurrLimitKey]
+        return rsp
 
     #GVR added
     def set_VEnd(self, V):
-        """Set end voltage """
+        """Set end voltage 
+        
+           Deprecated, retained for compatibilty.
+           Use set_V2
+        """
         cmd_dict = {CommandKey: SetVEndCmd, VEndKey: V}
         msg_dict = self.send_cmd(cmd_dict)
         rsp = msg_dict[ResponseKey][VEndKey]
@@ -478,6 +418,34 @@ class Potentiostat(serial.Serial):
         cmd_dict = {CommandKey: SetScanRateCmd, ScanRateKey: r}
         msg_dict = self.send_cmd(cmd_dict)
         rsp = msg_dict[ResponseKey][ScanRateKey]
+        return rsp
+
+    def set_Cycles(self, N):
+        """Set number of cycles """
+        cmd_dict = {CommandKey: SetCyclesCmd, CyclesKey: N}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][CyclesKey]
+        return rsp
+  
+    def get_Cycles(self):
+        """Get number of cycles """
+        cmd_dict = {CommandKey: GetCyclesCmd}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][CyclesKey]
+        return rsp
+
+    def get_SavePrescan(self):
+        """Get prescan save status ('on'|'off) """
+        cmd_dict = {CommandKey: GetSavePrescanCmd}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][PrescanKey]
+        return rsp
+   
+    def set_SavePrescan(self,S):
+        """Get prescan save status ('on'|'off) """
+        cmd_dict = {CommandKey: GetSavePrescanCmd, PrescanKey: S}
+        msg_dict = self.send_cmd(cmd_dict)
+        rsp = msg_dict[ResponseKey][PrescanKey]
         return rsp
 
     def get_ref_volt(self):
@@ -510,32 +478,74 @@ class Potentiostat(serial.Serial):
         """ Sets parameters for the specified test, with modifications to handle DE firmware V0.1
             Compatibility with original functionality is preserved RawMode is True  """
 
-        if self.RawMode and testname == 'cyclic':
+        if self.RawMode and testname in supportedTests:   #todo: get from device via get_test_names
             
-                # param['quietValue']    #ignore for now
-                # param['quietTime']        #ignore for now
-                # param['shift']    #ignore for now
-                # param['numCycles']    #ignore for now
+                # param['quietValue']  #ignore for now
+                # param['quietTime']   #ignore for now
+                # param['shift']       #ignore for now
 
-                if 'gain' in param.keys():
-                    rsp = self.set_gain(param['gain'])
 
-                if 'HV' in param.keys():
-                    rsp = self.set_HV(param['HV'])
+                if ScanRateKey in param.keys():
+                    self.set_scan_rate(param[ScanRateKey])  
 
-                if 'measure' in param.keys():
-                    rsp = self.set_measure(param['measure']) 
+                if SamplesKey in param.keys():
+                    self.set_samples(param[SamplesKey])  
 
-                rsp = self.set_VStart(param['offset'] - param['amplitude'] /2)
-                rsp = self.set_VEnd(param['offset'] + param['amplitude'] /2)
+                if PrescanKey in param.keys():
+                    self.set_SavePrescan(param[PrescanKey])  
 
-                self.scanRate = (4*1000 * param['amplitude'] ) / param ['period']  #period [ms] to V/s
-                rsp = self.set_ScanRate( self.scanRate ) 
+                if CyclesKey in param.keys():
+                    self.set_Cycles(param[CyclesKey])           
+ 
+                if GainKey in param.keys():
+                    self.set_gain(param[GainKey])
 
-                self.testDuration = np.abs(param['amplitude']) / self.scanRate
-                self.testLength = int(self.testDuration * 1000)  #!!! Hardcoded in firmware too !!! TODO: change in firmware and here.
+                if HVKey in param.keys():
+                    self.set_HV(param[HVKey])
+
+                if MeasureKey in param.keys():
+                    self.set_measure(param[MeasureKey]) 
+
+                if SamplePeriodKey in param.keys():
+                    self.set_sample_period(param[SamplePeriodKey])
+
+                # VStart, Vend deprecated in ECL firmware V0.3, retained here for compatibility
+                if OffsetKey in param.keys() and AmplitudeKey in param.keys():
+                    self.set_VStart(param[OffsetKey] - param[AmplitudeKey] /2)
+                    self.set_VEnd(param[OffsetKey] + param[AmplitudeKey] /2)
+                
+                if V0Key in param.keys():
+                    self.set_V0(param[V0Key])
+                if V1Key in param.keys():
+                    #print(param[V1Key])
+                    self.set_V1(param[V1Key])
+                    #print(self.getV1())
+                if V2Key in param.keys():
+                    #print(param[V2Key])
+                    self.set_V2(param[V2Key])
+                    #print(self.getV2())
+                if T0Key in param.keys():
+                    self.set_T0(param[T0Key])
+                if T1Key in param.keys():
+                    self.set_T1(param[T1Key])
+                if T2Key in param.keys():
+                    self.set_T2(param[T2Key])
+
+                time.sleep(3)
+                                                          
+                # ''' TODO: update with new parameters in ECL V0.3 firmware '''
+                #self.scanRate = (4*1000 * param['amplitude'] ) / param ['period']  #period [ms] to V/s
+                #self.set_ScanRate( self.scanRate ) 
+                
+                self.testDuration = self.get_T0() + (self.get_T1() + self.get_T2()) * self.get_Cycles()
+                #self.testLength = int(self.testDuration * 1000)  #!!! Hardcoded in firmware too !!! TODO: change in firmware and here.
+                self.testLength = (self.get_T1() + self.get_T2()) * self.get_sample_period()
+                if self.get_SavePrescan == PrescanSaveOn:
+                    self.testLength += self.get_T0() * 1/self.get_sample_period()
                 #print('Length: ', self.testLength)
-                return rsp   # not ideal to return response from last command  -  fix todo 
+                
+                return 'ok' #  need to return something more sensible than this... fix...todo
+
 
         else:    
             cmd_dict = {CommandKey: SetParamCmd, TestKey: testname, ParamKey: param}
@@ -614,7 +624,7 @@ class Potentiostat(serial.Serial):
         msg_dict = self.send_cmd(cmd_dict)
         return msg_dict[ResponseKey][DeviceIdKey]
 
-
+    ''' ECL V0.3 uses sample_time.  We will assume that it is interchangeable with sample_period '''
     def set_sample_period(self,sample_period):
         """Sets the sample period (s) used for measurements. The sample period is the
         time between samples. 
@@ -628,7 +638,6 @@ class Potentiostat(serial.Serial):
     def get_sample_period(self):
         """Gets the current value for the sample period (s). The sample period is the
         time between samples.
-
         """
         cmd_dict = {CommandKey: GetSamplePeriodCmd}
         msg_dict = self.send_cmd(cmd_dict)
@@ -821,9 +830,7 @@ class Potentiostat(serial.Serial):
             self.set_param(testname,param)
 
         if display in ('pbar', 'data'):
-            print()
-            print('test: {0}'.format(testname))
-            print()
+            #print('\ntest: {0}'.format(testname))
             display_print = True
         else:
             display_print = False
@@ -833,14 +840,12 @@ class Potentiostat(serial.Serial):
             widgets = [progressbar.Percentage(),progressbar.Bar()]
             pbar = progressbar.ProgressBar(widgets=widgets,maxval=test_done_tval)
             pbar.start()
-
         
         data_dict = {chan:{TimeKey:[],VoltKey:[],CurrKey:[],PhotoCurrKey:[]} for chan in channel_list}  # added PhotoCurr
 
         if display == 'plot':    # added GVR
             plotActive = livePlot(data_dict)
             figure(figsize=(7, 7/2))
-            
 
         # Determine output file type and open if required
         if filename is not None:
@@ -853,7 +858,7 @@ class Potentiostat(serial.Serial):
 
         # write parameters to file as header (added GVR)
         if (filename is not None) and (output_filetype == TxtOutputFileType):
-            fid.write(json.dumps(param))
+            fid.write(json.dumps(param) + '\n')
 
         # Start voltammetric test
         cmd_dict = {CommandKey: RunTestCmd, TestKey: testname}
@@ -937,14 +942,14 @@ class Potentiostat(serial.Serial):
                 # Handle diplay options
                 if display == 'data':
                     if chan == 0:
-                        print('{}, {}, {}, {}'.format(tval,volt,curr,phot))
-                        #print(f'{tval:9.4f, volt:9.4f, curr:9.4f\n}')
+                        fmt=PartialFormatter(bad='  ~', missing='  !')
+                        data = {'t': tval, 'prog': int(100*tval/self.testDuration),'v': volt, 'i': curr, 'l' : phot}
+                        print(fmt.format('Time: {t:1.3f} s ({prog:03d}%) Potential: {v:+1.4f} V, Current: {i:+1.4f} A, Photocurrent: {l:1.4f}', **data), end="\r", flush=True)                        
                     else:
-                        print('ch{0}: {1:1.3f}, {2:1.4f}, {3:1.4f}, {3:1.4f}'.format(chan,tval,volt,curr,phot))
+                        print('ch{0}: {1:1.3f}, {2:+1.4f}, {3:+1.4f}, {3:1.4f}'.format(chan,tval,volt,curr,phot), end="\r", flush=True)
                 else:
                     #display minimal progress information:
                     print('Sample: {} of {}'.format(samples,self.testLength),end="\r")
-
 
 
                 if display == 'plot':
@@ -1038,26 +1043,28 @@ class Potentiostat(serial.Serial):
                 try:
                     v = float(v)
                 except ValueError:
-                    pass
+                    try:
+                        v = int(v)
+                    except ValueError:
+                        pass
+
                 msg_dict = {ResponseKey: 
-                        {cmdMap[cmd_dict[CommandKey]]: v,
-                         CommandKey: cmd_dict[CommandKey]},  
-                        SuccessKey: '1'}  
+                            {cmdMap[cmd_dict[CommandKey]]: v,
+                            CommandKey: cmd_dict[CommandKey]},  
+                            SuccessKey: '1'}  
             else:
                  msg_dict = {ResponseKey: 
-                        {cmdMap[cmd_dict[CommandKey]]: v,
-                         CommandKey: cmd_dict[CommandKey]}}  
-            
+                            {cmdMap[cmd_dict[CommandKey]]: v,
+                            CommandKey: cmd_dict[CommandKey]}}  
+                
             if self.debug:
                 print('Response received: ' + str(msg) + '\n')
                 print('Response interpreted as: ' + str(msg_dict) + '\n')
             
- 
         else:    
             msg_json = self.readline()
             msg_json = msg_json.strip()
             msg_dict = json.loads(msg_json.decode())
-
 
         self.check_cmd_msg(cmd_dict,msg_dict)
         return msg_dict
@@ -1066,7 +1073,6 @@ class Potentiostat(serial.Serial):
     def check_cmd_msg(self,cmd_dict,msg_dict):
         self.check_for_success(msg_dict)
         self.check_cmd_match(cmd_dict,msg_dict)
-        
         
         if TestKey in cmd_dict:
            if self.RawMode == False:   
@@ -1110,4 +1116,46 @@ class Potentiostat(serial.Serial):
             print('Closing serial connection...',end='')
             self.close()
             print ('done.')
+
+    def getDeviceParameters(self):
+
+        self.get_hardware_variant()
+        #get_volt()
+        #get_curr()
+        #get_photo_curr()
+        #get_cell()
+        self.get_feedback()
+        self.get_samples()
+        self.get_gain()
+        self.get_HV()
+        self.get_HVEnable()
+        self.get_V0()
+        self.get_V1()
+        self.get_V2()
+        self.get_T0()
+        self.get_T1()
+        self.get_t2()
+        self.get_PhotocurrentLimit()
+        self.set_VEnd()
+        self.get_ScanRate()
+        self.getCyclesCmd()
+        self.GetSavePrescanCmd()
+        #get_ref_volt
+        #get_volt_range
+        #get_all_volt_range
+        #get_curr_range
+        #get_all_curr_range
+        self.get_device_id()
+        self.get_sample_period()
+        #get_sample_rate
+        #get_test_done_time
+        #get_test_names    << to be implemented
+        self.get_firmware_version()
+        #get_mux_enabled
+        #get_enabled_mux_channels
+        #get_mux_test_names
+        #get_mux_ref_elect_connected
+
+
+
 
