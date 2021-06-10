@@ -10,7 +10,7 @@ block_cipher = None
 
 
 a = Analysis(['ecl.py'],
-             pathex=['/Users/gvanriessen/code/GitHub/potentiostat/software/python/potentiostat'],
+             pathex=['/usr/local/bin/'],
              binaries=[],
              datas=[],
              hiddenimports=[],

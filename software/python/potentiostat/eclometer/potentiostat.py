@@ -43,9 +43,6 @@ except ImportError:
 from eclometer.protocol import *
 
 
-
-
-
 class Potentiostat(serial.Serial):
 
     """Provides a high level interface  performing serial communications with the Rodeostat. 
@@ -484,7 +481,6 @@ class Potentiostat(serial.Serial):
                 # param['quietTime']   #ignore for now
                 # param['shift']       #ignore for now
 
-
                 if ScanRateKey in param.keys():
                     self.set_scan_rate(param[ScanRateKey])  
 
@@ -517,21 +513,15 @@ class Potentiostat(serial.Serial):
                 if V0Key in param.keys():
                     self.set_V0(param[V0Key])
                 if V1Key in param.keys():
-                    #print(param[V1Key])
                     self.set_V1(param[V1Key])
-                    #print(self.getV1())
                 if V2Key in param.keys():
-                    #print(param[V2Key])
                     self.set_V2(param[V2Key])
-                    #print(self.getV2())
                 if T0Key in param.keys():
                     self.set_T0(param[T0Key])
                 if T1Key in param.keys():
                     self.set_T1(param[T1Key])
                 if T2Key in param.keys():
                     self.set_T2(param[T2Key])
-
-                time.sleep(3)
                                                           
                 # ''' TODO: update with new parameters in ECL V0.3 firmware '''
                 #self.scanRate = (4*1000 * param['amplitude'] ) / param ['period']  #period [ms] to V/s
@@ -545,7 +535,6 @@ class Potentiostat(serial.Serial):
                 #print('Length: ', self.testLength)
                 
                 return 'ok' #  need to return something more sensible than this... fix...todo
-
 
         else:    
             cmd_dict = {CommandKey: SetParamCmd, TestKey: testname, ParamKey: param}
@@ -811,7 +800,7 @@ class Potentiostat(serial.Serial):
 
         mux_enabled = False
         channel_list = [0]
-        # try/except to handly lack of mux implementation for ECL device (GVR)
+        # try/except to handle lack of mux implementation for ECL device (GVR)
         
         #if self.firmware_version >= MinimumFirmwareVersionForMux:
         #    mux_enabled = self.get_mux_enabled()
@@ -950,7 +939,6 @@ class Potentiostat(serial.Serial):
                 else:
                     #display minimal progress information:
                     print('Sample: {} of {}'.format(samples,self.testLength),end="\r")
-
 
                 if display == 'plot':
                     plotActive.data =  data_dict   # need to append not replace!

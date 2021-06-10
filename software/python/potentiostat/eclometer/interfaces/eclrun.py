@@ -4,6 +4,8 @@ import argparse
 import json
 import json_tricks
 import os
+from colorama import init
+init()
 
 try:
     import gooey
@@ -129,25 +131,25 @@ class ECLTest():
                     'T0'         : self.opt['T0'],
                     'T1'         : self.opt['T1'],
                     'T2'         : self.opt['T2']
-
                     }
 
             disp=None
             if self.opt['data'] is True: disp = 'data'
             if self.opt['live'] is True: disp = 'plot' 
             if self.opt['progress'] is True: disp = 'pbar'
-
             
             for i in range(0,self.opt['numRepeat']):
                 print()
                 print('Starting {0} test {1} of {2}'.format(self.opt['testName'],i+1,self.opt['numRepeat']))
                 self.data = self.dev.run_test(self.opt['testName'],      
-                                    param,  
-                                    display = disp,  
-                                    filename = self.opt['dataFileName'] % self.counter)           
+                                              param,  
+                                              display = disp,  
+                                              filename = self.opt['dataFileName'] % self.counter)           
                 self.counter += 1
                 print()
                 print('Completed {0} test {1} of {2}'.format(self.opt['testName'],i+1,self.opt['numRepeat']))
+
+                print(self.opt['numRepeat'])
 
                 #print (self.opt)
                 if self.opt['plot']:
@@ -195,9 +197,8 @@ def parserBase():
                                         'show_underline': False,
                                         'label_color': '#FF9900',
                                         'columns': 1,
-                                        #'margin_top': 1.
-                                        }
-                                        ) 
+                                        #'margin_top': 1. 
+                                        }) 
 
     prescanGroup = ETGroup.add_argument_group('Prescan',
                                             gooey_options={
@@ -283,7 +284,7 @@ def parserBase():
     testSubGroup = testGroup.add_argument_group(#"Options",
                                                 gooey_options={
                                                     'columns': 2}
-                                            )         
+                                                )         
 
     testSubGroup.add_argument('-t', '--test', 
                             dest='testName', 
@@ -449,7 +450,7 @@ def parserBase():
     groupDisplay.add_argument('--data', 
                             action='store_true', 
                             help='Display data during acquisition',
-                            metavar='Raw')   
+                            metavar='Raw')
     
     groupDisplay.add_argument('--debug', 
                             action='store_true', 
@@ -480,11 +481,11 @@ def parserBase():
 
     #try:
     ecl=ECLTest(options=params)
-    print('Device initialised...')
+    #print('Device initialised...')
     #except:
     #   print('Device initialisation failed.')
     #else:
-    ecl.run()
+    #ecl.run()
 
 
 def getPorts():
@@ -606,6 +607,7 @@ if __name__ == '__main__':
                 [print(p) for p in getPorts()]
     else:
         if gooey is None or 'nogui' in sys.argv:  # do not run GUI if not available or 'nogui' flag used
+            sys.argv.remove('nogui')
             ArgumentParser = argparse.ArgumentParser
             parser = parserBase
             parser()
@@ -615,6 +617,3 @@ if __name__ == '__main__':
             parser = parserBase
             parser = gui_decorator(parserBase)
             parser()
-
-
-
