@@ -4,8 +4,6 @@ import argparse
 import json
 import json_tricks
 import os
-from colorama import init
-init()
 
 try:
     import gooey
@@ -151,13 +149,13 @@ class ECLTest():
 
                 print(self.opt['numRepeat'])
 
-                #print (self.opt)
                 if self.opt['plot']:
                     self.plot()
 
 
     def plot(self):
         # Plot combinations of values contained in argument data.
+        from eclometer.plots import plotData
         plotData(self.data, smooth = self.opt['smooth'])
 
 
@@ -602,18 +600,19 @@ class PartialFormatter(string.Formatter):
 
 
 if __name__ == '__main__':
-
-    if 'ports' in sys.argv:
+        if 'ports' in sys.argv:
                 [print(p) for p in getPorts()]
-    else:
-        if gooey is None or 'nogui' in sys.argv:  # do not run GUI if not available or 'nogui' flag used
-            sys.argv.remove('nogui')
-            ArgumentParser = argparse.ArgumentParser
-            parser = parserBase
-            parser()
-
         else:
-            ArgumentParser = gooey.GooeyParser
-            parser = parserBase
-            parser = gui_decorator(parserBase)
-            parser()
+            if gooey is None or 'nogui' in sys.argv:  # do not run GUI if not available or 'nogui' flag used
+                sys.argv.remove('nogui')
+                ArgumentParser = argparse.ArgumentParser
+                parser = parserBase
+                parser()
+
+            else:
+                ArgumentParser = gooey.GooeyParser
+                parser = parserBase
+                parser = gui_decorator(parserBase)
+                parser()
+
+

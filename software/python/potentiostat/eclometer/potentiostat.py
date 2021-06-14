@@ -23,6 +23,7 @@ potentiostat
 from __future__ import print_function
 import serial
 import time
+from datetime import datetime
 import json
 import atexit
 import contextlib
@@ -613,6 +614,7 @@ class Potentiostat(serial.Serial):
         msg_dict = self.send_cmd(cmd_dict)
         return msg_dict[ResponseKey][DeviceIdKey]
 
+
     ''' ECL V0.3 uses sample_time.  We will assume that it is interchangeable with sample_period '''
     def set_sample_period(self,sample_period):
         """Sets the sample period (s) used for measurements. The sample period is the
@@ -800,8 +802,8 @@ class Potentiostat(serial.Serial):
 
         mux_enabled = False
         channel_list = [0]
-        # try/except to handle lack of mux implementation for ECL device (GVR)
         
+        # try/except to handle lack of mux implementation for ECL device (GVR)
         #if self.firmware_version >= MinimumFirmwareVersionForMux:
         #    mux_enabled = self.get_mux_enabled()
         
@@ -847,6 +849,8 @@ class Potentiostat(serial.Serial):
 
         # write parameters to file as header (added GVR)
         if (filename is not None) and (output_filetype == TxtOutputFileType):
+            param['Test'] = testname
+            #param['Date'] = datetime.today().strftime('%Y-%m-%d')
             fid.write(json.dumps(param) + '\n')
 
         # Start voltammetric test
@@ -1143,7 +1147,3 @@ class Potentiostat(serial.Serial):
         #get_enabled_mux_channels
         #get_mux_test_names
         #get_mux_ref_elect_connected
-
-
-
-
